@@ -1,0 +1,11 @@
+@use "./themes/variables" as *;
+
+@use "./base/reset" as *;
+@use "./base/typography" as *;
+@use "./base/base" as *;
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
