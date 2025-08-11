@@ -5,7 +5,7 @@ import utilStyles from "../../styles/utils/utils.module.scss";
 import Link from "next/link";
 import Header from "../Header/header";
 
-const name = "Yasin Kerem Budayoglu";
+const name = "Yasin Kerem Budayoğlu";
 export const siteTitle = "My Blog";
 
 export default function Layout({ children, home }) {
@@ -28,40 +28,24 @@ export default function Layout({ children, home }) {
           <meta name="og:title" content={siteTitle} />
           <meta name="twitter:card" content="summary_large_image" />
         </Head>
-        <header className={styles.header}>
-          {home ? (
-            <>
-              <Image
-                priority
-                src="/images/profile.jpg"
-                className={utilStyles.borderCircle}
-                height={144}
-                width={144}
-                alt=""
-              />
-              <h1 className={utilStyles.heading2Xl}>{name}</h1>
-            </>
-          ) : (
-            <>
-              <Link href="/">
-                <Image
-                  priority
-                  src="/images/profile.jpg"
-                  className={utilStyles.borderCircle}
-                  height={108}
-                  width={108}
-                  alt=""
-                />
-              </Link>
-              <h2 className={utilStyles.headingLg}>
-                <Link href="/" className={utilStyles.colorInherit}>
-                  {name}
-                </Link>
-              </h2>
-            </>
-          )}
-        </header>
+
+        {/* Show image + name only on home page */}
+        {home && (
+          <header className={styles.header}>
+            <Image
+              priority
+              src="/images/profile.jpg"
+              className={utilStyles.borderCircle}
+              height={144}
+              width={144}
+              alt={name}
+            />
+            <h1 className={utilStyles.heading2Xl}>{name}</h1>
+          </header>
+        )}
+
         <main>{children}</main>
+
         {!home && (
           <div className={styles.backToHome}>
             <Link href="/">← Back to home</Link>
@@ -71,3 +55,4 @@ export default function Layout({ children, home }) {
     </>
   );
 }
+

@@ -2,6 +2,7 @@ import AdminLayout from "@/components/AdminLayout/AdminLayout";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 const AdminDashboard = () => {
   const router = useRouter();
@@ -9,7 +10,7 @@ const AdminDashboard = () => {
   const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    const admin = localStorage.getItem("isAdmin") === "true";
+    const admin = Cookies.get("isAdmin") === "true";
     setIsAdmin(admin);
 
     if (!admin) {
@@ -17,7 +18,7 @@ const AdminDashboard = () => {
     } else {
       setAuthChecked(true);
     }
-  }, []);
+  }, [router]);
 
   if (!authChecked) return null;
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout/layout";
 import styles from "./new.module.scss";
+import Cookies from "js-cookie";
 
 export default function NewPost() {
   const [title, setTitle] = useState("");
@@ -11,14 +12,14 @@ export default function NewPost() {
   const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    const admin = localStorage.getItem("isAdmin") === "true";
+    const admin = Cookies.get("isAdmin") === "true";
     setIsAdmin(admin);
     if (!admin) {
       router.push("/");
     } else {
       setAuthChecked(true);
     }
-  }, []);
+  }, [router]);
 
   if (!authChecked) return null;
 

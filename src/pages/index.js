@@ -5,6 +5,7 @@ import utilStyles from "../styles/utils/utils.module.scss";
 import Link from "next/link";
 import Date from "@/components/date";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 export async function getStaticProps() {
   const allPostsData = getSortedPostsData();
@@ -17,8 +18,9 @@ export async function getStaticProps() {
 
 export default function Home({ allPostsData }) {
   const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
-    setIsAdmin(localStorage.getItem("isAdmin") === "true");
+    setIsAdmin(Cookies.get("isAdmin") === "true");
   }, []);
 
   return (

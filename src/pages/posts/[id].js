@@ -6,34 +6,35 @@ import utilStyles from "@/styles/utils/utils.module.scss";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 export default function Post({ postData }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    setIsAdmin(localStorage.getItem("isAdmin") === "true");
+    setIsAdmin(Cookies.get("isAdmin") === "true");
   }, []);
 
   const handleDelete = async () => {
-  if (confirm("Delete this post permanently?")) {
-    try {
-      const res = await fetch(`/api/posts/${postData.id}`, {
-        method: "DELETE",
-      });
+    if (confirm("Delete this post permanently?")) {
+      try {
+        const res = await fetch(`/api/posts/${postData.id}`, {
+          method: "DELETE",
+        });
 
-      if (res.ok) {
-        router.push("/");
-      } else {
-        const data = await res.json();
-        alert(data.error || "Failed to delete post.");
+        if (res.ok) {
+          router.push("/");
+        } else {
+          const data = await res.json();
+          alert(data.error || "Failed to delete post.");
+        }
+      } catch (err) {
+        alert("Server error while deleting.");
       }
-    } catch (err) {
-      alert("Server error while deleting.");
     }
-  }
-};
-
+  };
+   console.log(postData)
   return (
     <Layout>
       <Head>
@@ -44,7 +45,7 @@ export default function Post({ postData }) {
         <div className={utilStyles.lightText}>
           <Date dateString={postData.date} />
         </div>
-        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+        <div dangerouslySetInnerHTML={{ __html: postData.content }} />
         {isAdmin && (
           <div className={utilStyles.adminControls}>
             <Link
@@ -53,10 +54,7 @@ export default function Post({ postData }) {
             >
               ✏️ Edit Post
             </Link>
-            <button
-              onClick={handleDelete}
-              className={utilStyles.deleteButton}
-            >
+            <button onClick={handleDelete} className={utilStyles.deleteButton}>
               🗑️ Delete Post
             </button>
           </div>

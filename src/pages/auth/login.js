@@ -2,24 +2,51 @@ import Layout from "@/components/Layout/layout";
 import { useState } from "react";
 import styles from "./login.module.scss";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  const handleLogin = () => {
-    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+  const handleLogin = async () => {
+    setLoading(true);
+    setError("");
 
-    if (email === adminEmail && password === adminPassword) {
-      localStorage.setItem("isAdmin", "true");
-      router.push("/admin");
-      
-    } else {
-      setError("Invalid credentials");
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Cookies.set("isAdmin", "true", {
+          expires: 1,
+          sameSite: "Strict",
+          secure: process.env.NODE_ENV === "production",
+          path: "/",
+        });
+
+        router.push("/admin");
+      } else {
+        setError(data.message || "Invalid credentials");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,6 +62,7 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="admin@example.com"
+            disabled={loading}
           />
         </div>
         <div className={styles.inputGroup}>
@@ -45,14 +73,20 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
+            disabled={loading}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleLogin();
+              }
+            }}
           />
         </div>
-        <button 
-          className={styles.loginButton} 
+        <button
+          className={styles.loginButton}
           onClick={handleLogin}
-          disabled={!email || !password}
+          disabled={!email || !password || loading}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
         {error && <p className={styles.errorMessage}>{error}</p>}
       </div>

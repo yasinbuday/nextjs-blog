@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import styles from "./header.module.scss";
 
 export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
-    setIsAdmin(localStorage.getItem("isAdmin") === "true");
+    setIsAdmin(Cookies.get("isAdmin") === "true");
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("isAdmin");
+    Cookies.remove("isAdmin");
     window.location.href = "/auth/login";
   };
 
@@ -30,7 +32,7 @@ export default function Header() {
             </button>
           ) : (
             <Link href="/auth/login" className={styles.link}>
-              Login
+             Admin Login
             </Link>
           )}
         </nav>
