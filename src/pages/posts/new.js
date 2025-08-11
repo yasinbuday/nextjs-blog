@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "@/components/Layout/layout";
 import styles from "./new.module.scss";
 import Cookies from "js-cookie";
+import { Editor } from "primereact/editor";
 
 export default function NewPost() {
   const [title, setTitle] = useState("");
@@ -25,6 +26,7 @@ export default function NewPost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const res = await fetch("/api/posts", {
       method: "POST",
       headers: {
@@ -53,12 +55,10 @@ export default function NewPost() {
             onChange={(e) => setTitle(e.target.value)}
             required
           />
-          <textarea
-            rows={10}
-            placeholder="Write your markdown content here"
+          <Editor
             value={content}
-            onChange={(e) => setContent(e.target.value)}
-            required
+            onTextChange={(e) => setContent(e.htmlValue)}
+            style={{ height: "320px" }}
           />
           <button type="submit">Create Post</button>
         </form>
