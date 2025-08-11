@@ -34,7 +34,7 @@ const AdminDashboard = () => {
           <Link href="/posts/new">Create New Post</Link>
         </li>
         <li>
-          <Link href="/">Manage Posts</Link>
+          <Link href="/posts/manage">Manage Posts</Link>
         </li>
       </ul>
       <p>Use the links on the left to navigate through the admin panel.</p>
